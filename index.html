@@ -1,51 +1,1063 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stop Scrolling. Start Scaling. | Usman Afzal</title>
+<meta name="description" content="How I build simple digital assets, flip them for 15k, and how you can copy the exact blueprint." />
 
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-⚡ SESSION ENROLLMENT CLOSING SOON
-Closes in:
-00
-:
-00
-:
-00
-:
-00
-LIMITED SPOTS LEFT
+<!-- Tailwind CDN (works perfectly on Vercel static deployments) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          void: '#07090F',
+          neon: '#A3FF47',
+          cyber: '#7C3AED',
+          plasma: '#06D6F5',
+          glow: '#FF4ECD',
+        },
+        fontFamily: {
+          display: ['Syne', 'sans-serif'],
+          body: ['DM Sans', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
 
+<style>
+/* ════════════════════════════════════════
+   BASE RESET & GLOBALS
+════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #07090F;
+  color: #E2E8F0;
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
 
+/* ════════════════════════════════════════
+   CUSTOM CURSOR
+════════════════════════════════════════ */
+#cursor {
+  position: fixed; width: 12px; height: 12px;
+  background: #A3FF47; border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1.5px solid rgba(163,255,71,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+}
 
+/* ════════════════════════════════════════
+   NOISE OVERLAY (grain texture)
+════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 1; opacity: 0.5;
+}
 
+/* ════════════════════════════════════════
+   URGENCY BANNER
+════════════════════════════════════════ */
+#urgency-banner {
+  position: sticky; top: 0; z-index: 100;
+  background: linear-gradient(90deg, #07090F 0%, #0d1020 50%, #07090F 100%);
+  border-bottom: 1px solid rgba(163,255,71,0.15);
+  backdrop-filter: blur(12px);
+}
+.banner-pulse { animation: bannerPulse 2.5s ease-in-out infinite; }
+@keyframes bannerPulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
 
+/* Timer pill digits */
+.timer-digit {
+  display: inline-block;
+  background: rgba(163,255,71,0.08);
+  border: 1px solid rgba(163,255,71,0.25);
+  border-radius: 6px; padding: 2px 8px;
+  font-family: 'Syne', monospace; font-weight: 700;
+  color: #A3FF47; font-size: 0.9rem;
+  min-width: 32px; text-align: center;
+}
+.timer-sep { color: rgba(163,255,71,0.3); font-weight: 700; font-size: 0.9rem; }
 
-LIVE · BUILDING IN PUBLIC
-Stop Scrolling. Start Scaling.
-How I build simple digital assets on my iPad, flip them for 15k, and how you can copy the exact blueprint — starting today.
-Start Earning Now 💸
-No experience needed
-15k+
-Per project earned
+/* ════════════════════════════════════════
+   HERO
+════════════════════════════════════════ */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+}
+/* Dot grid */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(163,255,71,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(163,255,71,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+/* Glow orbs */
+.hero-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+.orb1 { width: 500px; height: 500px; background: rgba(124,58,237,0.18); top: -10%; left: -10%; animation: orbFloat1 12s ease-in-out infinite; }
+.orb2 { width: 400px; height: 400px; background: rgba(6,214,245,0.12); bottom: -5%; right: -5%; animation: orbFloat2 14s ease-in-out infinite; }
+.orb3 { width: 300px; height: 300px; background: rgba(163,255,71,0.1); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: orbFloat3 10s ease-in-out infinite; }
+@keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,20px)} }
+@keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-25px,-30px)} }
+@keyframes orbFloat3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.15)} }
 
-200+
-Students enrolled
+/* Floating canvas */
+#laptop-canvas {
+  position: absolute; right: 5%; top: 50%;
+  transform: translateY(-50%);
+  width: min(420px, 42vw); aspect-ratio: 1;
+  pointer-events: none; opacity: 0.55;
+}
+@media (max-width: 768px) {
+  #laptop-canvas { width: 90vw; right: 5%; opacity: 0.2; top: 15%; transform: none; }
+}
 
-iPad
-Only tool needed
-SCROLL
+/* Hero text animations */
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(163,255,71,0.08); border: 1px solid rgba(163,255,71,0.2);
+  border-radius: 100px; padding: 6px 16px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+  color: #A3FF47; text-transform: uppercase;
+  animation: fadeSlideUp 0.6s ease both;
+}
+.hero-h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  line-height: 1.05; letter-spacing: -0.02em;
+  animation: fadeSlideUp 0.7s 0.1s ease both;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #A3FF47 0%, #06D6F5 50%, #7C3AED 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub {
+  max-width: 520px; color: #94A3B8; font-size: 1.1rem; line-height: 1.7;
+  animation: fadeSlideUp 0.7s 0.2s ease both;
+}
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes scrollPulse { 0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
 
+/* ════════════════════════════════════════
+   CTA BUTTON
+════════════════════════════════════════ */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #A3FF47; color: #07090F;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+  padding: 16px 36px; border-radius: 100px; border: none; cursor: none;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(163,255,71,0.35), 0 0 80px rgba(163,255,71,0.1);
+  animation: fadeSlideUp 0.7s 0.3s ease both;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, #A3FF47, #06D6F5);
+  opacity: 0; transition: opacity 0.3s;
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 0 50px rgba(163,255,71,0.6), 0 0 100px rgba(163,255,71,0.2); }
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary span { position: relative; z-index: 1; }
 
-STEP 01 — ACCESS
-Lock In Your Spot
-100% free to register. Premium packages unlock below once you're in.
-Create Account
-Sign In
-YOUR NAME
-EMAIL ADDRESS
-Create Free Account →
-🔒 Zero spam. Your info stays private.
-Usman Afzal
-Digital Creator · Web Architect · Bot Engineer
+/* ════════════════════════════════════════
+   STATS ROW — counting animation targets
+════════════════════════════════════════ */
+.stat-item { animation: fadeSlideUp 0.7s 0.4s ease both; }
+.stat-num {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 1.8rem; color: #E2E8F0;
+  display: inline-block;
+}
+.stat-suffix { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; color: #E2E8F0; }
 
-@usmanafzalfilms
+/* ════════════════════════════════════════
+   SECTION LABELS
+════════════════════════════════════════ */
+.section-label {
+  display: inline-block;
+  background: rgba(163,255,71,0.08); border: 1px solid rgba(163,255,71,0.2);
+  border-radius: 100px; padding: 4px 14px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+  color: #A3FF47; text-transform: uppercase;
+}
 
-Contact Us Now
-© 2025 Usman Afzal. Building the future, one asset at a time.
-Made with 🖤 on iPad
+/* ════════════════════════════════════════
+   AUTH CARD
+════════════════════════════════════════ */
+#auth-section { position: relative; }
+.auth-card {
+  background: rgba(17,24,39,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px; backdrop-filter: blur(20px);
+  padding: 48px; position: relative; overflow: hidden;
+}
+.auth-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at top, rgba(124,58,237,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.input-field {
+  width: 100%; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  padding: 14px 18px; color: #E2E8F0;
+  font-family: 'DM Sans', sans-serif; font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+}
+.input-field:focus { border-color: rgba(163,255,71,0.4); box-shadow: 0 0 0 3px rgba(163,255,71,0.08); }
+.input-field::placeholder { color: #475569; }
+.btn-auth {
+  width: 100%;
+  background: linear-gradient(135deg, #A3FF47 0%, #06D6F5 100%);
+  color: #07090F; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+  padding: 15px; border-radius: 12px; border: none; cursor: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 25px rgba(163,255,71,0.25);
+}
+.btn-auth:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(163,255,71,0.4); }
+.btn-auth:active { transform: scale(0.98); }
+
+/* ════════════════════════════════════════
+   SUCCESS TOAST
+════════════════════════════════════════ */
+#success-toast {
+  display: none; position: fixed; bottom: 32px; right: 32px;
+  background: rgba(17,24,39,0.97); border: 1px solid rgba(163,255,71,0.3);
+  border-radius: 16px; padding: 16px 24px;
+  backdrop-filter: blur(20px); z-index: 200;
+  animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes toastIn { from{opacity:0;transform:translateY(20px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+/* ════════════════════════════════════════
+   PRICING CARDS
+════════════════════════════════════════ */
+#packages { display: none; }
+#packages.revealed { display: block; animation: fadeSlideUp 0.8s ease both; }
+
+.package-card {
+  background: rgba(17,24,39,0.7);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 24px; padding: 36px;
+  position: relative; overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.35s, border-color 0.3s;
+  transform-style: preserve-3d;
+  cursor: none;
+}
+.package-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(163,255,71,0.06) 0%, transparent 60%);
+  pointer-events: none; opacity: 0; transition: opacity 0.3s;
+}
+.package-card:hover::after { opacity: 1; }
+.card-web:hover  { border-color: rgba(6,214,245,0.35);  box-shadow: 0 20px 60px rgba(6,214,245,0.1),  0 0 0 1px rgba(6,214,245,0.08); }
+.card-bot:hover  { border-color: rgba(124,58,237,0.35); box-shadow: 0 20px 60px rgba(124,58,237,0.1), 0 0 0 1px rgba(124,58,237,0.08); }
+.card-combo:hover{ border-color: rgba(163,255,71,0.45); box-shadow: 0 20px 60px rgba(163,255,71,0.13), 0 0 0 1px rgba(163,255,71,0.15); }
+
+.card-combo {
+  background: rgba(17,24,39,0.92);
+  border: 1px solid rgba(163,255,71,0.2);
+  box-shadow: 0 0 40px rgba(163,255,71,0.05), inset 0 1px 0 rgba(163,255,71,0.08);
+}
+.popular-badge {
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #A3FF47 0%, #06D6F5 100%);
+  color: #07090F; font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 6px 20px; border-radius: 0 0 12px 12px;
+}
+.card-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 20px;
+}
+.card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; color: #F1F5F9; margin-bottom: 10px; }
+.card-desc   { color: #64748B; font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+.card-bullet { display: flex; align-items: flex-start; gap: 10px; font-size: 0.875rem; color: #94A3B8; margin-bottom: 10px; }
+.bullet-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.price-old   { font-size: 0.9rem; color: #475569; text-decoration: line-through; }
+.price-new   { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: #F1F5F9; }
+.btn-card {
+  display: block; width: 100%; text-align: center; text-decoration: none;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
+  padding: 14px 24px; border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s; margin-top: 28px;
+}
+.btn-card:hover { transform: translateY(-2px); }
+.btn-web   { background: rgba(6,214,245,0.1);   border: 1px solid rgba(6,214,245,0.3);   color: #06D6F5; }
+.btn-bot   { background: rgba(124,58,237,0.1);  border: 1px solid rgba(124,58,237,0.3);  color: #A78BFA; }
+.btn-combo { background: linear-gradient(135deg, rgba(163,255,71,0.12), rgba(6,214,245,0.12)); border: 1px solid rgba(163,255,71,0.3); color: #A3FF47; }
+.btn-web:hover   { background: rgba(6,214,245,0.2);   box-shadow: 0 0 25px rgba(6,214,245,0.2); }
+.btn-bot:hover   { background: rgba(124,58,237,0.2);  box-shadow: 0 0 25px rgba(124,58,237,0.2); }
+.btn-combo:hover { background: linear-gradient(135deg, rgba(163,255,71,0.22), rgba(6,214,245,0.22)); box-shadow: 0 0 30px rgba(163,255,71,0.25); }
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer { border-top: 1px solid rgba(255,255,255,0.06); background: rgba(7,9,15,0.98); }
+.social-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 24px; border-radius: 12px;
+  font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem;
+  text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, color 0.2s, border-color 0.2s;
+  border: 1px solid rgba(255,255,255,0.1); color: #E2E8F0;
+  background: rgba(255,255,255,0.04);
+}
+.social-btn:hover { transform: translateY(-2px); }
+.social-btn.whatsapp:hover   { border-color: rgba(37,211,102,0.4); box-shadow: 0 0 25px rgba(37,211,102,0.15); color: #25D366; }
+.social-btn.instagram:hover  { border-color: rgba(255,78,205,0.4); box-shadow: 0 0 25px rgba(255,78,205,0.15); color: #FF4ECD; }
+
+/* ════════════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ════════════════════════════════════════
+   RESPONSIVE TWEAKS
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .auth-card { padding: 28px 20px; }
+  .hero-h1 { font-size: 2.6rem; }
+  #success-toast { bottom: 16px; right: 16px; left: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Custom Cursor ── -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ════════════════════════════════════════
+     URGENCY BANNER
+════════════════════════════════════════ -->
+<div id="urgency-banner">
+  <div style="max-width:1200px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+    <span class="banner-pulse" style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:#A3FF47;text-transform:uppercase;">⚡ SESSION ENROLLMENT CLOSING SOON</span>
+    <div style="display:flex;align-items:center;gap:5px;font-size:0.75rem;color:#64748B;">
+      <span>Closes in:</span>
+      <span class="timer-digit" id="t-days">00</span><span class="timer-sep">:</span>
+      <span class="timer-digit" id="t-hours">00</span><span class="timer-sep">:</span>
+      <span class="timer-digit" id="t-mins">00</span><span class="timer-sep">:</span>
+      <span class="timer-digit" id="t-secs">00</span>
+    </div>
+    <span style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:#475569;text-transform:uppercase;">LIMITED SPOTS LEFT</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     HERO SECTION
+════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+
+  <!-- Floating code geometry canvas -->
+  <canvas id="laptop-canvas"></canvas>
+
+  <!-- Hero content -->
+  <div style="position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:80px 24px;">
+    <div style="max-width:640px;">
+
+      <!-- Live badge -->
+      <div class="hero-badge">
+        <span style="width:6px;height:6px;background:#A3FF47;border-radius:50%;display:inline-block;animation:bannerPulse 1.5s infinite;"></span>
+        Live · Building in Public
+      </div>
+
+      <!-- Headline -->
+      <h1 class="hero-h1" style="margin-top:24px;">
+        Stop Scrolling.<br/>
+        <span class="gradient-text">Start Scaling.</span>
+      </h1>
+
+      <!-- Subheadline — "iPad" removed, replaced with "phone or laptop" -->
+      <p class="hero-sub" style="margin-top:20px;">
+        How I build simple digital assets using just my phone or laptop, flip them for 15k, and how you can copy the exact blueprint — starting today.
+      </p>
+
+      <!-- CTA -->
+      <div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+        <button class="btn-primary" onclick="document.getElementById('auth-section').scrollIntoView({behavior:'smooth'})">
+          <span>Start Earning Now 💸</span>
+        </button>
+        <span style="color:#475569;font-size:0.85rem;">No experience needed</span>
+      </div>
+
+      <!-- ── Stats Row (counting animation) ── -->
+      <div style="margin-top:48px;display:flex;flex-wrap:wrap;gap:32px;align-items:center;" class="stat-item" id="stats-row">
+
+        <div>
+          <!-- data-target = final number, data-suffix = text appended after -->
+          <div>
+            <span class="stat-num" data-target="15" data-suffix="k+">0</span><span class="stat-suffix" style="display:none;"></span>
+          </div>
+          <div style="font-size:0.8rem;color:#475569;margin-top:2px;">Per project earned</div>
+        </div>
+
+        <div style="width:1px;background:rgba(255,255,255,0.08);height:36px;"></div>
+
+        <div>
+          <div>
+            <span class="stat-num" data-target="50" data-suffix="+">0</span>
+          </div>
+          <div style="font-size:0.8rem;color:#475569;margin-top:2px;">Clients served</div>
+        </div>
+
+        <div style="width:1px;background:rgba(255,255,255,0.08);height:36px;"></div>
+
+        <div>
+          <div>
+            <span class="stat-num" data-target="100" data-suffix="%">0</span>
+          </div>
+          <div style="font-size:0.8rem;color:#475569;margin-top:2px;">Remote freedom</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.4;animation:fadeSlideUp 1s 0.8s ease both;">
+    <span style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:#475569;">Scroll</span>
+    <div style="width:1px;height:32px;background:linear-gradient(to bottom,#A3FF47,transparent);animation:scrollPulse 1.5s infinite;"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     AUTH SECTION
+════════════════════════════════════════ -->
+<section id="auth-section" style="padding:100px 24px;position:relative;max-width:1200px;margin:0 auto;">
+  <!-- Background ambient glow -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(124,58,237,0.09) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div style="text-align:center;margin-bottom:48px;" class="reveal">
+    <span class="section-label">Step 01 — Access</span>
+    <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;margin-top:16px;letter-spacing:-0.02em;">Lock In Your Spot</h2>
+    <p style="color:#64748B;margin-top:12px;max-width:420px;margin-left:auto;margin-right:auto;font-size:1rem;line-height:1.6;">100% free to register. Premium packages unlock below once you're in.</p>
+  </div>
+
+  <div style="max-width:460px;margin:0 auto;" class="reveal">
+    <div class="auth-card" id="auth-card">
+
+      <!-- ── Auth Form View ── -->
+      <div id="auth-form-view">
+        <!-- Tab switcher -->
+        <div style="display:flex;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:6px;margin-bottom:32px;">
+          <button id="tab-signup" onclick="switchTab('signup')" style="flex:1;padding:10px;border-radius:10px;background:#A3FF47;color:#07090F;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;border:none;cursor:none;transition:all 0.2s;">Create Account</button>
+          <button id="tab-signin" onclick="switchTab('signin')" style="flex:1;padding:10px;border-radius:10px;background:transparent;color:#64748B;font-family:'Syne',sans-serif;font-weight:600;font-size:0.85rem;border:none;cursor:none;transition:all 0.2s;">Sign In</button>
+        </div>
+
+        <div id="name-field" style="margin-bottom:16px;">
+          <label style="display:block;font-size:0.8rem;font-weight:600;color:#64748B;margin-bottom:8px;letter-spacing:0.05em;text-transform:uppercase;">Your Name</label>
+          <input class="input-field" id="input-name" type="text" placeholder="e.g. Ali Hassan" />
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <label style="display:block;font-size:0.8rem;font-weight:600;color:#64748B;margin-bottom:8px;letter-spacing:0.05em;text-transform:uppercase;">Email Address</label>
+          <input class="input-field" id="input-email" type="email" placeholder="you@example.com" />
+        </div>
+
+        <button class="btn-auth" id="auth-btn" onclick="handleAuth()">Create Free Account →</button>
+
+        <p style="text-align:center;font-size:0.78rem;color:#374151;margin-top:16px;">🔒 Zero spam. Your info stays private.</p>
+      </div>
+
+      <!-- ── Signed-In View (hidden initially) ── -->
+      <div id="auth-success-view" style="display:none;text-align:center;padding:20px 0;">
+        <div id="check-anim" style="width:72px;height:72px;border-radius:50%;background:rgba(163,255,71,0.1);border:2px solid rgba(163,255,71,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:2rem;">✓</div>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:#F1F5F9;" id="welcome-msg">Welcome aboard!</h3>
+        <p style="color:#64748B;font-size:0.9rem;margin-top:8px;">Your spot is secured. See packages below ↓</p>
+        <div style="margin-top:20px;padding:12px 20px;background:rgba(163,255,71,0.06);border:1px solid rgba(163,255,71,0.15);border-radius:10px;">
+          <span id="user-email-display" style="font-size:0.85rem;color:#A3FF47;font-weight:600;"></span>
+        </div>
+        <button onclick="document.getElementById('packages').scrollIntoView({behavior:'smooth'})" style="margin-top:24px;background:linear-gradient(135deg,#A3FF47,#06D6F5);color:#07090F;font-family:'Syne',sans-serif;font-weight:700;padding:12px 28px;border-radius:10px;border:none;cursor:none;font-size:0.9rem;transition:transform 0.2s;">
+          View Packages 🎯
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PACKAGES SECTION (revealed on auth)
+════════════════════════════════════════ -->
+<section id="packages" style="padding:100px 24px;position:relative;max-width:1280px;margin:0 auto;">
+
+  <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:350px;background:radial-gradient(ellipse,rgba(163,255,71,0.05) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div style="text-align:center;margin-bottom:60px;">
+    <span class="section-label">Step 02 — Choose Your Path</span>
+    <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:800;margin-top:16px;letter-spacing:-0.02em;">The Blueprint. Pick Your Stack.</h2>
+    <p style="color:#64748B;margin-top:12px;font-size:1rem;">Session pricing only. Prices increase after enrollment closes.</p>
+  </div>
+
+  <!-- Cards grid -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;">
+
+    <!-- ── Card 1: Web Architecture Masterclass ── -->
+    <div class="package-card card-web">
+      <div class="card-icon" style="background:rgba(6,214,245,0.1);">🖥️</div>
+      <div class="card-title">Web Architecture Masterclass</div>
+      <p class="card-desc">Learn to design, build, and sell premium websites without touching complex code — using AI as your co-founder.</p>
+      <div style="margin-bottom:24px;">
+        <div class="card-bullet"><span class="bullet-dot" style="background:#06D6F5;"></span><span>Full Web Design — from scratch to live</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#06D6F5;"></span><span>Zero-Code &amp; AI-powered deployment</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#06D6F5;"></span><span>Landing high-ticket clients (10k–15k)</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#06D6F5;"></span><span>Remote-first workflow walkthrough</span></div>
+      </div>
+      <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.06);">
+        <div class="price-old">19,999 RS</div>
+        <div class="price-new">11,999 <span style="font-size:1rem;font-weight:500;color:#64748B;">RS</span></div>
+        <div style="font-size:0.75rem;color:#A3FF47;margin-top:4px;">Session special — 40% OFF</div>
+      </div>
+      <a href="https://wa.me/923341624747?text=Hey%20Usman!%20I%20want%20to%20lock%20in%20the%20Web%20Architecture%20Masterclass%20at%20the%20discounted%20price."
+         target="_blank" rel="noopener noreferrer" class="btn-card btn-web">Purchase Course 🚀</a>
+    </div>
+
+    <!-- ── Card 2: Autonomous Bot Engineering ── -->
+    <div class="package-card card-bot">
+      <div class="card-icon" style="background:rgba(124,58,237,0.12);">🤖</div>
+      <div class="card-title">Autonomous Bot Engineering</div>
+      <p class="card-desc">Build AI-powered bots that generate income 24/7 — even while you sleep. No CS degree required.</p>
+      <div style="margin-bottom:24px;">
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A78BFA;"></span><span>Automated WhatsApp Chatbots</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A78BFA;"></span><span>AI-Assisted Coding (no experience needed)</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A78BFA;"></span><span>Monetizing automations for SaaS clients</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A78BFA;"></span><span>Recurring revenue model setup</span></div>
+      </div>
+      <div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.06);">
+        <div class="price-old">19,999 RS</div>
+        <div class="price-new">11,999 <span style="font-size:1rem;font-weight:500;color:#64748B;">RS</span></div>
+        <div style="font-size:0.75rem;color:#A78BFA;margin-top:4px;">Session special — 40% OFF</div>
+      </div>
+      <a href="https://wa.me/923341624747?text=Hey%20Usman!%20I%20want%20to%20lock%20in%20the%20Autonomous%20Bot%20Engineering%20course%20at%20the%20discounted%20price."
+         target="_blank" rel="noopener noreferrer" class="btn-card btn-bot">Purchase Course 🤖</a>
+    </div>
+
+    <!-- ── Card 3: Ultimate Combo (Most Popular) ── -->
+    <div class="package-card card-combo" style="position:relative;padding-top:44px;">
+      <div class="popular-badge">⭐ MOST POPULAR / BEST VALUE</div>
+      <div class="card-icon" style="background:rgba(163,255,71,0.08);">👑</div>
+      <div class="card-title" style="color:#A3FF47;">The Ultimate Tech Stack</div>
+      <p class="card-desc">Web + Bot Combo. Everything in both courses, plus exclusive community access and live Q&amp;A sessions.</p>
+      <div style="margin-bottom:24px;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#A3FF47;margin-bottom:12px;">Everything in Web + Bot, plus:</div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A3FF47;"></span><span>All Web Architecture modules</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A3FF47;"></span><span>All Bot Engineering modules</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A3FF47;"></span><span>Private Discord community access</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A3FF47;"></span><span>Live Q&amp;A sessions with Usman</span></div>
+        <div class="card-bullet"><span class="bullet-dot" style="background:#A3FF47;"></span><span>Lifetime updates to the material</span></div>
+      </div>
+      <div style="padding:16px;background:rgba(163,255,71,0.04);border-radius:12px;border:1px solid rgba(163,255,71,0.15);">
+        <div class="price-old">29,999 RS</div>
+        <div class="price-new" style="color:#A3FF47;">19,999 <span style="font-size:1rem;font-weight:500;color:#64748B;">RS</span></div>
+        <div style="font-size:0.75rem;color:#A3FF47;margin-top:4px;">Save 10,000 RS vs. buying separate</div>
+      </div>
+      <a href="https://wa.me/923341624747?text=Hey%20Usman!%20I%20want%20the%20Ultimate%20Web%20%2B%20Bot%20Combo%20Package%20before%20the%20session%20closes."
+         target="_blank" rel="noopener noreferrer" class="btn-card btn-combo">Claim Full Access 👑</a>
+    </div>
+
+  </div>
+
+  <!-- Guarantee strip -->
+  <div style="margin-top:48px;padding:20px 28px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;display:flex;flex-wrap:wrap;gap:20px;justify-content:center;align-items:center;" class="reveal">
+    <span style="font-size:0.9rem;color:#64748B;">🔒 Secure payment via WhatsApp</span>
+    <span style="color:#1E293B;">|</span>
+    <span style="font-size:0.9rem;color:#64748B;">📲 Instant access after payment</span>
+    <span style="color:#1E293B;">|</span>
+    <span style="font-size:0.9rem;color:#64748B;">🌐 Learn from anywhere, any device</span>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     FOOTER / TRUST LAYER
+════════════════════════════════════════ -->
+<footer style="padding:48px 24px;margin-top:40px;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <!-- Top row -->
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.05);">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#F1F5F9;">Usman Afzal</div>
+        <div style="font-size:0.85rem;color:#475569;margin-top:4px;">Digital Creator · Web Architect · Bot Engineer</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;">
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/usmanafzalfilms?igsh=cDVqdDE3eGR4dWdn&utm_source=qr"
+           target="_blank" rel="noopener noreferrer" class="social-btn instagram">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+          </svg>
+          @usmanafzalfilms
+        </a>
+        <!-- WhatsApp -->
+        <a href="https://wa.me/923341624747" target="_blank" rel="noopener noreferrer" class="social-btn whatsapp">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Contact Us Now
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div style="padding-top:24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;">
+      <p style="font-size:0.78rem;color:#374151;">© 2025 Usman Afzal. Building the future, one asset at a time.</p>
+      <p style="font-size:0.78rem;color:#374151;">Made with 🖤 from anywhere in the world</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Success Toast -->
+<div id="success-toast">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(163,255,71,0.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">✓</div>
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:#F1F5F9;" id="toast-name-msg">You're in!</div>
+      <div style="font-size:0.78rem;color:#64748B;margin-top:2px;">Packages unlocked below ↓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+/* ──────────────────────────────────────────
+   CUSTOM CURSOR
+────────────────────────────────────────── */
+const cursor     = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top  = mouseY + 'px';
+});
+
+(function animRing() {
+  ringX += (mouseX - ringX) * 0.12;
+  ringY += (mouseY - ringY) * 0.12;
+  cursorRing.style.left = ringX + 'px';
+  cursorRing.style.top  = ringY + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+// Enlarge cursor on interactive elements
+document.querySelectorAll('a, button, .btn-primary, .btn-auth, .btn-card, .social-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; cursor.style.background = '#06D6F5'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; cursor.style.background = '#A3FF47'; });
+});
+
+/* ──────────────────────────────────────────
+   HERO PARALLAX ON MOUSE MOVE
+────────────────────────────────────────── */
+document.addEventListener('mousemove', e => {
+  const rx = (e.clientX / window.innerWidth  - 0.5) * 15;
+  const ry = (e.clientY / window.innerHeight - 0.5) * 15;
+  document.querySelector('.orb1').style.transform = `translate(${rx * 0.5}px, ${ry * 0.5}px)`;
+  document.querySelector('.orb2').style.transform = `translate(${-rx * 0.4}px, ${-ry * 0.4}px)`;
+});
+
+/* ──────────────────────────────────────────
+   COUNTDOWN TIMER — persisted in localStorage
+   Resets automatically for another 5 days when it hits 0
+────────────────────────────────────────── */
+(function initTimer() {
+  const KEY      = 'ua_session_end';
+  const DURATION = 5 * 24 * 60 * 60 * 1000; // 5 days in ms
+  let endTime = parseInt(localStorage.getItem(KEY) || '0');
+  const now = Date.now();
+
+  // If no saved time or it expired, create a fresh 5-day window
+  if (!endTime || endTime <= now) {
+    endTime = now + DURATION;
+    localStorage.setItem(KEY, endTime);
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const diff = Math.max(0, endTime - Date.now());
+
+    // Auto-reset when timer hits zero — perpetually urgent
+    if (diff === 0) {
+      endTime = Date.now() + DURATION;
+      localStorage.setItem(KEY, endTime);
+    }
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000)  / 60000);
+    const s = Math.floor((diff % 60000)    / 1000);
+
+    document.getElementById('t-days').textContent  = pad(d);
+    document.getElementById('t-hours').textContent = pad(h);
+    document.getElementById('t-mins').textContent  = pad(m);
+    document.getElementById('t-secs').textContent  = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ──────────────────────────────────────────
+   COUNTING ANIMATION FOR STATS
+   Triggers once when the stats row enters the viewport
+────────────────────────────────────────── */
+function animateCounter(el, target, suffix, duration) {
+  const start    = performance.now();
+  const startVal = 0;
+
+  function step(now) {
+    const elapsed  = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease-out cubic
+    const eased    = 1 - Math.pow(1 - progress, 3);
+    const current  = Math.round(startVal + (target - startVal) * eased);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const statsObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+        const target   = parseInt(el.getAttribute('data-target'));
+        const suffix   = el.getAttribute('data-suffix') || '';
+        animateCounter(el, target, suffix, 1800); // 1.8s duration
+      });
+      statsObserver.disconnect(); // fire once only
+    }
+  });
+}, { threshold: 0.4 });
+
+const statsRow = document.getElementById('stats-row');
+if (statsRow) statsObserver.observe(statsRow);
+
+/* ──────────────────────────────────────────
+   AUTH — TAB SWITCHER
+────────────────────────────────────────── */
+function switchTab(tab) {
+  const nameField = document.getElementById('name-field');
+  const signupBtn = document.getElementById('tab-signup');
+  const signinBtn = document.getElementById('tab-signin');
+  const authBtn   = document.getElementById('auth-btn');
+
+  if (tab === 'signup') {
+    nameField.style.display = 'block';
+    signupBtn.style.cssText += ';background:#A3FF47;color:#07090F;';
+    signinBtn.style.cssText += ';background:transparent;color:#64748B;';
+    authBtn.textContent = 'Create Free Account →';
+  } else {
+    nameField.style.display = 'none';
+    signinBtn.style.cssText += ';background:#A3FF47;color:#07090F;';
+    signupBtn.style.cssText += ';background:transparent;color:#64748B;';
+    authBtn.textContent = 'Sign In & Access Packages →';
+  }
+}
+
+/* ──────────────────────────────────────────
+   AUTH — HANDLE SUBMIT
+   Saves lead to localStorage; reveals packages section
+────────────────────────────────────────── */
+function handleAuth() {
+  const nameEl  = document.getElementById('input-name');
+  const emailEl = document.getElementById('input-email');
+  const email   = emailEl.value.trim();
+  const name    = nameEl.value.trim() || 'Creator';
+
+  // Basic email validation
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    emailEl.style.borderColor = 'rgba(255,78,100,0.5)';
+    emailEl.style.boxShadow   = '0 0 0 3px rgba(255,78,100,0.08)';
+    emailEl.placeholder = 'Please enter a valid email';
+    setTimeout(() => {
+      emailEl.style.borderColor = '';
+      emailEl.style.boxShadow   = '';
+      emailEl.placeholder = 'you@example.com';
+    }, 1800);
+    return;
+  }
+
+  // Save lead
+  const leads = JSON.parse(localStorage.getItem('ua_leads') || '[]');
+  leads.push({ name, email, timestamp: new Date().toISOString() });
+  localStorage.setItem('ua_leads', JSON.stringify(leads));
+
+  // Reveal success view
+  revealPackagesUI(name, email, false);
+}
+
+function revealPackagesUI(name, email, returning) {
+  document.getElementById('auth-form-view').style.display = 'none';
+  document.getElementById('auth-success-view').style.display = 'block';
+  document.getElementById('welcome-msg').textContent = returning
+    ? `Welcome back, ${name}! 👋`
+    : `Welcome, ${name}! 🎉`;
+  document.getElementById('user-email-display').textContent = email;
+
+  // Reveal packages section
+  const pkgSection = document.getElementById('packages');
+  pkgSection.classList.add('revealed');
+
+  // Animate check icon
+  const check = document.getElementById('check-anim');
+  check.style.transform  = 'scale(0)';
+  check.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+  setTimeout(() => { check.style.transform = 'scale(1)'; }, 50);
+
+  if (!returning) {
+    // Show toast
+    const toast = document.getElementById('success-toast');
+    document.getElementById('toast-name-msg').textContent = `You're in, ${name}!`;
+    toast.style.display = 'block';
+    setTimeout(() => {
+      toast.style.opacity    = '0';
+      toast.style.transition = 'opacity 0.5s';
+      setTimeout(() => { toast.style.display = 'none'; toast.style.opacity = '1'; toast.style.transition = ''; }, 500);
+    }, 3000);
+
+    // Scroll to packages
+    setTimeout(() => { pkgSection.scrollIntoView({ behavior: 'smooth' }); }, 1200);
+  }
+}
+
+// Allow Enter key to submit
+document.addEventListener('keydown', e => {
+  const active = document.activeElement;
+  if (e.key === 'Enter' && (active.id === 'input-email' || active.id === 'input-name')) {
+    handleAuth();
+  }
+});
+
+// Auto-restore session if user was already registered
+(function restoreSession() {
+  const leads = JSON.parse(localStorage.getItem('ua_leads') || '[]');
+  if (leads.length > 0) {
+    const last = leads[leads.length - 1];
+    revealPackagesUI(last.name, last.email, true);
+  }
+})();
+
+/* ──────────────────────────────────────────
+   SCROLL REVEAL (generic)
+────────────────────────────────────────── */
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ──────────────────────────────────────────
+   3D CARD TILT on hover
+────────────────────────────────────────── */
+document.querySelectorAll('.package-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform = `translateY(-8px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+/* ──────────────────────────────────────────
+   CANVAS — Floating Code Geometry / Laptop Wireframe
+────────────────────────────────────────── */
+(function initCanvas() {
+  const canvas = document.getElementById('laptop-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    // Respect device pixel ratio for sharp rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = canvas.offsetWidth  * dpr;
+    canvas.height = canvas.offsetHeight * dpr;
+    ctx.scale(dpr, dpr);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Particle nodes (the floating network dots)
+  const nodes = Array.from({ length: 30 }, () => ({
+    x:     Math.random(),
+    y:     Math.random(),
+    vx:    (Math.random() - 0.5) * 0.0007,
+    vy:    (Math.random() - 0.5) * 0.0007,
+    r:     Math.random() * 2.5 + 1,
+    color: ['#A3FF47', '#06D6F5', '#7C3AED'][Math.floor(Math.random() * 3)],
+    pulse: Math.random() * Math.PI * 2,
+  }));
+
+  // Draw the laptop wireframe outline
+  function drawLaptop(W, H) {
+    const cx = W * 0.5, cy = H * 0.5;
+    const bw = W * 0.72, bh = bw * 0.60;
+    const sx = cx - bw / 2, sy = cy - bh / 2;
+
+    // Screen frame
+    ctx.beginPath();
+    ctx.roundRect(sx, sy, bw, bh * 0.70, 12);
+    ctx.strokeStyle = 'rgba(163,255,71,0.18)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Screen gradient fill
+    const grad = ctx.createLinearGradient(sx, sy, sx, sy + bh * 0.7);
+    grad.addColorStop(0, 'rgba(124,58,237,0.06)');
+    grad.addColorStop(1, 'rgba(6,214,245,0.03)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Simulated code lines inside the screen
+    const margin = bw * 0.08;
+    const lineY0 = sy + bh * 0.12;
+    const lines  = [
+      { w: 0.55, c: 'rgba(163,255,71,0.4)'  },
+      { w: 0.40, c: 'rgba(6,214,245,0.3)'   },
+      { w: 0.62, c: 'rgba(255,255,255,0.15)' },
+      { w: 0.30, c: 'rgba(163,255,71,0.25)' },
+      { w: 0.50, c: 'rgba(124,58,237,0.35)' },
+    ];
+    lines.forEach((l, i) => {
+      ctx.beginPath();
+      ctx.moveTo(sx + margin, lineY0 + i * bh * 0.09);
+      ctx.lineTo(sx + margin + bw * l.w, lineY0 + i * bh * 0.09);
+      ctx.strokeStyle = l.c;
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+    });
+
+    // Base / keyboard
+    ctx.beginPath();
+    ctx.roundRect(sx - bw * 0.04, sy + bh * 0.70, bw * 1.08, bh * 0.22, [0, 0, 8, 8]);
+    ctx.strokeStyle = 'rgba(163,255,71,0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Trackpad
+    const tpW = bw * 0.28, tpH = bh * 0.10;
+    ctx.beginPath();
+    ctx.roundRect(cx - tpW / 2, sy + bh * 0.76, tpW, tpH, 4);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  let frame = 0, mx = 0.5, my = 0.5;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX / window.innerWidth;
+    my = e.clientY / window.innerHeight;
+  });
+
+  function draw() {
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    ctx.clearRect(0, 0, W, H);
+    frame++;
+
+    // Mouse parallax offset + floating bob
+    const ox = (mx - 0.5) * 18;
+    const oy = (my - 0.5) * 10 + Math.sin(frame * 0.012) * 8;
+
+    ctx.save();
+    ctx.translate(ox, oy);
+
+    // Draw laptop wireframe
+    drawLaptop(W, H);
+
+    // Draw + update particles
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > 1) n.vx *= -1;
+      if (n.y < 0 || n.y > 1) n.vy *= -1;
+      n.pulse += 0.03;
+
+      const alpha = 0.4 + Math.sin(n.pulse) * 0.3;
+      ctx.globalAlpha = alpha * 0.75;
+      ctx.beginPath();
+      ctx.arc(n.x * W, n.y * H, n.r * (1 + Math.sin(n.pulse) * 0.2), 0, Math.PI * 2);
+      ctx.fillStyle = n.color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    // Draw connecting lines between nearby nodes
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx   = (nodes[i].x - nodes[j].x) * W;
+        const dy   = (nodes[i].y - nodes[j].y) * H;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < W * 0.18) {
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x * W, nodes[i].y * H);
+          ctx.lineTo(nodes[j].x * W, nodes[j].y * H);
+          ctx.strokeStyle = `rgba(163,255,71,${(1 - dist / (W * 0.18)) * 0.1})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
